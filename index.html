@@ -2790,8 +2790,9 @@ function updateAnalysisChart() {
           const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
           circle.setAttribute('cx', heartX.toFixed(1));
           circle.setAttribute('cy', heartY.toFixed(1));
-          circle.setAttribute('r', '3.5');
-          circle.setAttribute('fill', '#ff6b6b');
+          circle.setAttribute('r', '8');
+          circle.setAttribute('fill', '#ff0000');
+          circle.setAttribute('opacity', '0.8');
           svg.appendChild(circle);
         });
       });
