@@ -2599,7 +2599,8 @@ function updateAnalysisTable() {
       const cell = document.createElement('td');
       const reading = byDate[date]?.[period]?.[arm];
       if (reading) {
-        cell.textContent = `${reading.sys}/${reading.dia}`;
+        const hrText = reading.hr ? ` (${reading.hr})` : '';
+        cell.innerHTML = `<div>${reading.sys}/${reading.dia}</div><div style="font-size:0.85rem;color:#a855f7;font-weight:600;">♥ ${reading.hr || '—'}</div>`;
         cell.style.textAlign = 'center';
       } else {
         cell.textContent = '—';
