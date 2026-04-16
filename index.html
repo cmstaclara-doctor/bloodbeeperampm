@@ -2757,38 +2757,33 @@ function updateAnalysisChart() {
     });
   });
 
-  // Draw HR as hearts on Y-axis (auto-scaled to data range)
+  // Draw HR as hearts (circles) on Y-axis
   if (filterHR) {
-    // Collect all HR values
     let allHR = [];
     barGroups.forEach(g => g.group.forEach(bar => { if (bar.hr) allHR.push(bar.hr); }));
 
     if (allHR.length > 0) {
       const hrMin = Math.min(...allHR);
       const hrMax = Math.max(...allHR);
-      const hrRange = hrMax - hrMin || 1;
+      const hrRange = Math.max(1, hrMax - hrMin);
 
-      // Draw hearts
-      barGroups.forEach(({dateIdx, group}, groupIdx) => {
+      barGroups.forEach(({dateIdx, group}) => {
         const centerX = leftMargin + (dateIdx / (labels.length - 1 || 1)) * chartW;
         const totalW = group.length * barW + (group.length - 1) * spacing;
         let startX = centerX - totalW / 2;
         startX = Math.max(leftMargin + 5, Math.min(startX, leftMargin + chartW - totalW - 5));
 
         group.forEach((bar, barIdx) => {
-          if (!bar.hr) return;
-
+          if (bar.hr < 1) return;
           const x = startX + barIdx * (barW + spacing) + barW / 2;
           const y = topMargin + ((hrMax - bar.hr) / hrRange) * chartH;
-
-          const heart = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-          heart.setAttribute('x', x);
-          heart.setAttribute('y', y + 5);
-          heart.setAttribute('text-anchor', 'middle');
-          heart.setAttribute('font-size', '13');
-          heart.setAttribute('fill', '#ff6b6b');
-          heart.textContent = '❤';
-          svg.appendChild(heart);
+          const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          c.setAttribute('cx', x);
+          c.setAttribute('cy', y);
+          c.setAttribute('r', '3.5');
+          c.setAttribute('fill', '#ff6b6b');
+          c.setAttribute('opacity', '0.9');
+          svg.appendChild(c);
         });
       });
     }
