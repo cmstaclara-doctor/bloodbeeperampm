@@ -2757,7 +2757,7 @@ function updateAnalysisChart() {
     });
   });
 
-  // Draw HR as heart emoji on HR scale (40-120 bpm)
+  // Draw HR as dots on HR scale (40-120 bpm)
   if (filterHR) {
     const hrMin = 40, hrMax = 120, hrRange = hrMax - hrMin;
     barGroups.forEach(({dateIdx, group}) => {
@@ -2771,19 +2771,30 @@ function updateAnalysisChart() {
         if (!reading || !reading.hr) return;
 
         const x = startX + barIdx * (barW + spacing) + barW / 2;
-        // Position heart on HR scale (not BP scale!)
+        // Position dot on HR scale (40-120 bpm)
         const y = topMargin + ((hrMax - reading.hr) / hrRange) * chartH;
 
-        // Heart emoji text
-        const heart = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        heart.setAttribute('x', x);
-        heart.setAttribute('y', y + 5);
-        heart.setAttribute('text-anchor', 'middle');
-        heart.setAttribute('font-size', '16');
-        heart.setAttribute('fill', '#ff6b6b');
-        heart.setAttribute('opacity', '0.85');
-        heart.textContent = '❤';
-        svg.appendChild(heart);
+        // Draw red dot (circle) for heart rate
+        const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        dot.setAttribute('cx', x);
+        dot.setAttribute('cy', y);
+        dot.setAttribute('r', '5');
+        dot.setAttribute('fill', '#ff6b6b');
+        dot.setAttribute('opacity', '0.8');
+        dot.setAttribute('stroke', '#ff4444');
+        dot.setAttribute('stroke-width', '1');
+        svg.appendChild(dot);
+
+        // Add HR value label above dot
+        const hrLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        hrLabel.setAttribute('x', x);
+        hrLabel.setAttribute('y', y - 12);
+        hrLabel.setAttribute('text-anchor', 'middle');
+        hrLabel.setAttribute('font-size', '11');
+        hrLabel.setAttribute('fill', '#ff6b6b');
+        hrLabel.setAttribute('font-weight', 'bold');
+        hrLabel.textContent = reading.hr;
+        svg.appendChild(hrLabel);
       });
     });
   }
