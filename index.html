@@ -2757,37 +2757,33 @@ function updateAnalysisChart() {
     });
   });
 
-  // Draw HR as circles on Y-axis
-  if (filterHR) {
-    // TEST: Draw one circle at known position to verify SVG works
-    const testCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    testCircle.setAttribute('cx', '200');
-    testCircle.setAttribute('cy', '150');
-    testCircle.setAttribute('r', '6');
-    testCircle.setAttribute('fill', '#ff0000');
-    svg.appendChild(testCircle);
-
-    // Now draw actual HR circles
+  // Draw HR as circles
+  if (filterHR && barGroups.length > 0) {
     let hrs = [];
-    barGroups.forEach(bg => bg.group.forEach(b => { if (b.hr) hrs.push(b.hr); }));
+    barGroups.forEach(g => g.group.forEach(b => { if (b.hr) hrs.push(b.hr); }));
 
     if (hrs.length > 0) {
-      const hmin = Math.min(...hrs), hmax = Math.max(...hrs), hrange = hmax - hmin || 1;
+      const hmin = Math.min(...hrs), hmax = Math.max(...hrs), hrange = Math.max(1, hmax - hmin);
+
       barGroups.forEach(bg => {
-        const cx = leftMargin + (bg.dateIdx / (labels.length - 1 || 1)) * chartW;
-        const tw = bg.group.length * barW + (bg.group.length - 1) * spacing;
-        let sx = cx - tw / 2;
-        sx = Math.max(leftMargin + 5, Math.min(sx, leftMargin + chartW - tw - 5));
-        bg.group.forEach((b, i) => {
-          if (!b.hr) return;
-          const bx = sx + i * (barW + spacing) + barW / 2;
-          const by = topMargin + ((hmax - b.hr) / hrange) * chartH;
-          const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-          circle.setAttribute('cx', bx);
-          circle.setAttribute('cy', by);
-          circle.setAttribute('r', '4');
-          circle.setAttribute('fill', '#ff6b6b');
-          svg.appendChild(circle);
+        const centerX = leftMargin + (bg.dateIdx / Math.max(1, labels.length - 1)) * chartW;
+        const grpWidth = bg.group.length * barW + (bg.group.length - 1) * spacing;
+        let startX = centerX - grpWidth / 2;
+        startX = Math.max(leftMargin + 5, Math.min(startX, leftMargin + chartW - grpWidth - 5));
+
+        bg.group.forEach((bar, idx) => {
+          if (!bar.hr) return;
+
+          const heartX = startX + idx * (barW + spacing) + barW / 2;
+          const heartY = topMargin + ((hmax - bar.hr) / hrange) * chartH;
+
+          const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          c.setAttribute('cx', heartX.toFixed(1));
+          c.setAttribute('cy', heartY.toFixed(1));
+          c.setAttribute('r', '3');
+          c.setAttribute('fill', '#ff6b6b');
+          c.setAttribute('stroke', 'none');
+          svg.appendChild(c);
         });
       });
     }
