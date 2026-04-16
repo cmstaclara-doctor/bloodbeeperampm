@@ -2457,6 +2457,7 @@ function renderAnalysis() {
   });
 
   window._chartData = chartData;
+  window._analysisTableData = { byDate, dates };
 
   el.innerHTML = `
     <!-- Filters Header -->
@@ -2531,9 +2532,78 @@ function renderAnalysis() {
         <div class="zone-legend-item"><div class="zone-dot" style="background:#ef4444;"></div> Very High ≥140/≥90 (Bad)</div>
         <div class="zone-legend-item"><div class="zone-dot" style="background:#7f1d1d;"></div> Crisis ≥180/≥120</div>
       </div>
+    </div>
+
+    <!-- Data Table -->
+    <div class="analysis-card card" style="padding:16px;overflow-x:auto;">
+      <div class="card-title">Reading Data</div>
+      <table id="analysis-data-table" class="slot-table" style="font-size:0.95rem;">
+        <thead>
+          <tr>
+            <th>Reading Type</th>
+          </tr>
+        </thead>
+        <tbody id="analysis-table-body">
+          <!-- Populated by JavaScript -->
+        </tbody>
+      </table>
     </div>`;
 
   updateAnalysisChart();
+  updateAnalysisTable();
+}
+
+function updateAnalysisTable() {
+  if (!window._analysisTableData) return;
+  const { byDate, dates } = window._analysisTableData;
+  const tbody = document.getElementById('analysis-table-body');
+  if (!tbody) return;
+
+  const table = document.getElementById('analysis-data-table');
+  const headerRow = table.querySelector('thead tr');
+
+  // Build header row with dates
+  headerRow.innerHTML = '<th>Reading Type</th>';
+  dates.forEach(date => {
+    const th = document.createElement('th');
+    th.textContent = date;
+    th.style.textAlign = 'center';
+    th.style.minWidth = '100px';
+    headerRow.appendChild(th);
+  });
+
+  // Build data rows
+  tbody.innerHTML = '';
+  const readingTypes = ['AM LEFT', 'AM RIGHT', 'PM LEFT', 'PM RIGHT'];
+  const keyMap = { 'AM LEFT': ['AM', 'LEFT'], 'AM RIGHT': ['AM', 'RIGHT'], 'PM LEFT': ['PM', 'LEFT'], 'PM RIGHT': ['PM', 'RIGHT'] };
+
+  readingTypes.forEach(type => {
+    const row = document.createElement('tr');
+    const [period, arm] = keyMap[type];
+
+    // Type label
+    const typeCell = document.createElement('td');
+    typeCell.textContent = type;
+    typeCell.style.fontWeight = '600';
+    row.appendChild(typeCell);
+
+    // Data cells
+    dates.forEach(date => {
+      const cell = document.createElement('td');
+      const reading = byDate[date]?.[period]?.[arm];
+      if (reading) {
+        cell.textContent = `${reading.sys}/${reading.dia}`;
+        cell.style.textAlign = 'center';
+      } else {
+        cell.textContent = '—';
+        cell.style.textAlign = 'center';
+        cell.style.color = '#999';
+      }
+      row.appendChild(cell);
+    });
+
+    tbody.appendChild(row);
+  });
 }
 
 function updateAnalysisChart() {
