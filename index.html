@@ -2594,14 +2594,15 @@ function updateAnalysisTable() {
     typeCell.style.fontWeight = '600';
     row.appendChild(typeCell);
 
-    // Data cells
+    // Data cells (compact format)
     dates.forEach(date => {
       const cell = document.createElement('td');
       const reading = byDate[date]?.[period]?.[arm];
       if (reading) {
-        const hrText = reading.hr ? ` (${reading.hr})` : '';
-        cell.innerHTML = `<div>${reading.sys}/${reading.dia}</div><div style="font-size:0.85rem;color:#a855f7;font-weight:600;">♥ ${reading.hr || '—'}</div>`;
+        const time = new Date(reading.timestamp).toLocaleTimeString('en-PH', {hour:'2-digit', minute:'2-digit'});
+        cell.innerHTML = `<div style="font-size:0.9rem;font-weight:600;">${reading.sys}/${reading.dia}</div><div style="font-size:0.75rem;color:#666;">@${time}</div><div style="font-size:0.85rem;color:#ff6b6b;font-weight:600;">♥${reading.hr || '—'}</div>`;
         cell.style.textAlign = 'center';
+        cell.style.padding = '4px 2px';
       } else {
         cell.textContent = '—';
         cell.style.textAlign = 'center';
