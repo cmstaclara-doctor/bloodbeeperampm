@@ -2732,29 +2732,31 @@ function updateAnalysisChart() {
     });
   });
 
-  // Draw HR dots
+  // Draw HR dots under corresponding bars (same color as bar)
   if (filterHR) {
-    const allReadings = [
-      ...am_left.map((r, i) => ({...r, dateIdx: i})),
-      ...am_right.map((r, i) => ({...r, dateIdx: i})),
-      ...pm_left.map((r, i) => ({...r, dateIdx: i})),
-      ...pm_right.map((r, i) => ({...r, dateIdx: i}))
-    ].filter(r => r && r.hr);
+    barGroups.forEach(({dateIdx, group}) => {
+      const groupCenterX = leftMargin + (dateIdx / (labels.length - 1 || 1)) * chartW;
+      const totalGroupWidth = group.length * barW + (group.length - 1) * spacing;
+      let startX = groupCenterX - totalGroupWidth / 2;
+      startX = Math.max(leftMargin + 5, Math.min(startX, leftMargin + chartW - totalGroupWidth - 5));
 
-    allReadings.forEach(reading => {
-      const x = leftMargin + (reading.dateIdx / (labels.length - 1 || 1)) * chartW;
-      const y = topMargin + ((maxY - reading.hr) / rangeY) * chartH;
-      const circleRadius = 4;
+      group.forEach((bar, barIdx) => {
+        const reading = [am_left, am_right, pm_left, pm_right][barIdx]?.[dateIdx];
+        if (!reading || !reading.hr) return;
 
-      const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-      circle.setAttribute('cx', x);
-      circle.setAttribute('cy', y);
-      circle.setAttribute('r', circleRadius);
-      circle.setAttribute('fill', '#a855f7');
-      circle.setAttribute('stroke', '#7c3aed');
-      circle.setAttribute('stroke-width', '1.5');
-      circle.setAttribute('opacity', '0.8');
-      svg.appendChild(circle);
+        const x = startX + barIdx * (barW + spacing) + barW / 2;
+        const y = topMargin + ((maxY - reading.hr) / rangeY) * chartH;
+
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('cx', x);
+        circle.setAttribute('cy', y);
+        circle.setAttribute('r', 5);
+        circle.setAttribute('fill', bar.color);
+        circle.setAttribute('stroke', '#fff');
+        circle.setAttribute('stroke-width', '1.5');
+        circle.setAttribute('opacity', '0.9');
+        svg.appendChild(circle);
+      });
     });
   }
 
