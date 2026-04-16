@@ -2757,9 +2757,20 @@ function updateAnalysisChart() {
     });
   });
 
-  // Draw HR as heart shapes on Y-axis (HR scale: 50-110 bpm)
+  // Draw HR as heart shapes on Y-axis (use actual data range)
   if (filterHR) {
-    const hrMin = 50, hrMax = 110, hrRange = hrMax - hrMin;
+    // Calculate actual HR min/max from visible data
+    let hrValues = [];
+    barGroups.forEach(({group}) => {
+      group.forEach(bar => {
+        if (bar.hr) hrValues.push(bar.hr);
+      });
+    });
+
+    if (hrValues.length > 0) {
+      const hrMin = Math.min(...hrValues);
+      const hrMax = Math.max(...hrValues);
+      const hrRange = Math.max(1, hrMax - hrMin);
     barGroups.forEach(({dateIdx, group}) => {
       const groupCenterX = leftMargin + (dateIdx / (labels.length - 1 || 1)) * chartW;
       const totalGroupWidth = group.length * barW + (group.length - 1) * spacing;
@@ -2788,6 +2799,7 @@ function updateAnalysisChart() {
         svg.appendChild(heart);
       });
     });
+    }
   }
 
   // Draw trend lines
