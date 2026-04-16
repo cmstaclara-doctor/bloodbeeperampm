@@ -2757,33 +2757,42 @@ function updateAnalysisChart() {
     });
   });
 
-  // Draw HR as circles
-  if (filterHR && barGroups.length > 0) {
-    let hrs = [];
-    barGroups.forEach(g => g.group.forEach(b => { if (b.hr) hrs.push(b.hr); }));
+  // Draw HR as circles - plot from raw data
+  if (filterHR) {
+    const dataArrays = [{data: am_left, arrayIdx: 0}, {data: am_right, arrayIdx: 1}, {data: pm_left, arrayIdx: 2}, {data: pm_right, arrayIdx: 3}];
+    let allHR = [];
+    dataArrays.forEach(({data}) => data.forEach(r => { if (r && r.hr) allHR.push(r.hr); }));
 
-    if (hrs.length > 0) {
-      const hmin = Math.min(...hrs), hmax = Math.max(...hrs), hrange = Math.max(1, hmax - hmin);
+    if (allHR.length > 0) {
+      const hmin = Math.min(...allHR), hmax = Math.max(...allHR), hrange = Math.max(1, hmax - hmin);
 
-      barGroups.forEach(bg => {
-        const centerX = leftMargin + (bg.dateIdx / Math.max(1, labels.length - 1)) * chartW;
-        const grpWidth = bg.group.length * barW + (bg.group.length - 1) * spacing;
-        let startX = centerX - grpWidth / 2;
-        startX = Math.max(leftMargin + 5, Math.min(startX, leftMargin + chartW - grpWidth - 5));
+      // For each date
+      labels.forEach((label, dateIdx) => {
+        // For each of the 4 data arrays
+        dataArrays.forEach(({data, arrayIdx}) => {
+          const reading = data[dateIdx];
+          if (!reading || !reading.hr) return;
 
-        bg.group.forEach((bar, idx) => {
-          if (!bar.hr) return;
+          // Check if this reading should be displayed (based on filters)
+          const isPM = arrayIdx >= 2;
+          const isRight = arrayIdx % 2 === 1;
+          if (isPM && !filterPM) return;
+          if (!isPM && !filterAM) return;
+          if (isRight && !filterRight) return;
+          if (!isRight && !filterLeft) return;
 
-          const heartX = startX + idx * (barW + spacing) + barW / 2;
-          const heartY = topMargin + ((hmax - bar.hr) / hrange) * chartH;
+          // Calculate position
+          const dateX = leftMargin + (dateIdx / Math.max(1, labels.length - 1)) * chartW;
+          const barOffset = (arrayIdx - 1.5) * (barW + spacing);
+          const heartX = dateX + barOffset + barW / 2;
+          const heartY = topMargin + ((hmax - reading.hr) / hrange) * chartH;
 
-          const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-          c.setAttribute('cx', heartX.toFixed(1));
-          c.setAttribute('cy', heartY.toFixed(1));
-          c.setAttribute('r', '3');
-          c.setAttribute('fill', '#ff6b6b');
-          c.setAttribute('stroke', 'none');
-          svg.appendChild(c);
+          const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          circle.setAttribute('cx', heartX.toFixed(1));
+          circle.setAttribute('cy', heartY.toFixed(1));
+          circle.setAttribute('r', '3.5');
+          circle.setAttribute('fill', '#ff6b6b');
+          svg.appendChild(circle);
         });
       });
     }
