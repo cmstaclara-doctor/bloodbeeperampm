@@ -320,10 +320,10 @@
     #toggle-sys { accent-color: #f97316; color: #f97316; }
     #toggle-dia { accent-color: #3b82f6; color: #3b82f6; }
     #toggle-hr { accent-color: #a855f7; color: #a855f7; }
-    #filter-hr { accent-color: #ff6b6b !important; }
-    #filter-hr:checked { accent-color: #ff6b6b !important; }
-    #filter-hr { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; border: 2px solid #ff6b6b; border-radius: 4px; cursor: pointer; }
-    #filter-hr:checked { background: #ff6b6b; }
+    #filter-hr { -webkit-appearance: none; appearance: none; width: 0; height: 0; margin: 0; padding: 0; border: none; background: none; cursor: pointer; }
+    #filter-hr::before { content: '❤'; font-size: 24px; color: #ff6b6b; display: inline-block; width: 24px; height: 24px; text-align: center; line-height: 1; }
+    #filter-hr:checked::before { opacity: 1; }
+    #filter-hr:not(:checked)::before { opacity: 0.4; }
 
     /* ── Analysis / AI ────────────────────────── */
     .summary-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 12px; }
