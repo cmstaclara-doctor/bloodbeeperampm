@@ -2460,7 +2460,7 @@ function renderAnalysis() {
 
   el.innerHTML = `
     <!-- Filters Header -->
-    <div id="analysis-filters" style="padding:6px 0;display:flex;gap:20px;justify-content:center;align-items:flex-start;margin-bottom:10px;flex-wrap:wrap;">
+    <div id="analysis-filters" style="padding:6px 0;display:flex;gap:16px;justify-content:center;align-items:flex-start;margin-bottom:10px;flex-wrap:wrap;">
       <div style="text-align:center;">
         <label style="display:flex;align-items:center;justify-content:center;gap:4px;cursor:pointer;font-weight:600;font-size:0.9rem;margin-bottom:5px;"><input type="checkbox" id="filter-am" checked onchange="updateAnalysisChart()"><span>AM</span></label>
         <div style="display:flex;gap:4px;justify-content:center;">
@@ -2488,6 +2488,12 @@ function renderAnalysis() {
           <span style="width:16px;height:16px;background:#90EE90;border:1px solid #999;border-radius:1px;"></span>
           <span style="width:16px;height:16px;background:#228B22;border:1px solid #999;border-radius:1px;"></span>
         </div>
+      </div>
+      <div style="border-left:2px solid #ddd;padding-left:16px;display:flex;gap:8px;flex-wrap:wrap;justify-content:center;">
+        <label style="display:flex;align-items:center;justify-content:center;gap:4px;cursor:pointer;font-weight:600;font-size:0.85rem;white-space:nowrap;"><input type="checkbox" id="trend-aml" checked onchange="updateAnalysisChart()"><span style="font-size:0.8rem;">📈 AM L</span></label>
+        <label style="display:flex;align-items:center;justify-content:center;gap:4px;cursor:pointer;font-weight:600;font-size:0.85rem;white-space:nowrap;"><input type="checkbox" id="trend-amr" checked onchange="updateAnalysisChart()"><span style="font-size:0.8rem;">📈 AM R</span></label>
+        <label style="display:flex;align-items:center;justify-content:center;gap:4px;cursor:pointer;font-weight:600;font-size:0.85rem;white-space:nowrap;"><input type="checkbox" id="trend-pml" checked onchange="updateAnalysisChart()"><span style="font-size:0.8rem;">📈 PM L</span></label>
+        <label style="display:flex;align-items:center;justify-content:center;gap:4px;cursor:pointer;font-weight:600;font-size:0.85rem;white-space:nowrap;"><input type="checkbox" id="trend-pmr" checked onchange="updateAnalysisChart()"><span style="font-size:0.8rem;">📈 PM R</span></label>
       </div>
     </div>
 
@@ -2517,6 +2523,10 @@ function updateAnalysisChart() {
   const filterPM = document.getElementById('filter-pm')?.checked ?? true;
   const filterLeft = document.getElementById('filter-left')?.checked ?? true;
   const filterRight = document.getElementById('filter-right')?.checked ?? true;
+  const trendAML = document.getElementById('trend-aml')?.checked ?? true;
+  const trendAMR = document.getElementById('trend-amr')?.checked ?? true;
+  const trendPML = document.getElementById('trend-pml')?.checked ?? true;
+  const trendPMR = document.getElementById('trend-pmr')?.checked ?? true;
 
   const { labels, am_left, am_right, pm_left, pm_right } = window._chartData;
   const svg = document.getElementById('chart-container');
@@ -2621,6 +2631,46 @@ function updateAnalysisChart() {
       rect.setAttribute('stroke-width', '1');
       svg.appendChild(rect);
     });
+  });
+
+  // Draw trend lines
+  const trendData = [
+    {data: am_left, color: '#87CEEB', show: trendAML},
+    {data: am_right, color: '#90EE90', show: trendAMR},
+    {data: pm_left, color: '#0066CC', show: trendPML},
+    {data: pm_right, color: '#228B22', show: trendPMR}
+  ];
+
+  trendData.forEach(trend => {
+    if (!trend.show) return;
+    const points = trend.data.map((r, i) => r ? {x: i, y: r.sys} : null).filter(p => p);
+    if (points.length < 2) return;
+
+    // Linear regression
+    const n = points.length;
+    const sumX = points.reduce((s, p) => s + p.x, 0);
+    const sumY = points.reduce((s, p) => s + p.y, 0);
+    const sumXY = points.reduce((s, p) => s + p.x * p.y, 0);
+    const sumX2 = points.reduce((s, p) => s + p.x * p.x, 0);
+    const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+    const intercept = (sumY - slope * sumX) / n;
+
+    // Draw trend line
+    const p1x = leftMargin + (points[0].x / (labels.length - 1 || 1)) * chartW;
+    const p1y = topMargin + ((maxY - (slope * points[0].x + intercept)) / rangeY) * chartH;
+    const p2x = leftMargin + (points[points.length - 1].x / (labels.length - 1 || 1)) * chartW;
+    const p2y = topMargin + ((maxY - (slope * points[points.length - 1].x + intercept)) / rangeY) * chartH;
+
+    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    line.setAttribute('x1', p1x);
+    line.setAttribute('y1', p1y);
+    line.setAttribute('x2', p2x);
+    line.setAttribute('y2', p2y);
+    line.setAttribute('stroke', trend.color);
+    line.setAttribute('stroke-width', '3');
+    line.setAttribute('opacity', '0.6');
+    line.setAttribute('stroke-dasharray', '5,5');
+    svg.appendChild(line);
   });
 
   // X-axis labels (dates)
