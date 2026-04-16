@@ -461,6 +461,7 @@
     }
 
     @media (max-width: 500px) {
+      body { font-size: 20px; }
       .qlog-grid { grid-template-columns: 1fr 1fr; }
       .qlog-grid2 { grid-template-columns: 1fr; }
       .summary-grid { grid-template-columns: 1fr 1fr; }
@@ -469,11 +470,11 @@
 
       .tab { padding: 12px; }
       .card { padding: 18px; }
-      nav button { font-size: 1rem; padding: 16px 4px; }
-      .dg-date { font-size: 1.15rem; }
-      .ri-bp { font-size: 1.75rem; }
+      nav button { font-size: 1.1rem; padding: 16px 4px; }
+      .dg-date { font-size: 1.25rem; }
+      .ri-bp { font-size: 1.9rem; }
       .reading-item { padding: 20px 0; }
-      .btn-sm, .btn-danger { width: 100%; margin-top: 8px; }
+      .btn-sm, .btn-danger { width: 100%; margin-top: 8px; font-size: 1.05rem; }
       .setting-row { flex-wrap: wrap; }
       .cal-row { padding: 14px 12px; }
       .date-header { padding: 16px 12px; }
@@ -482,11 +483,20 @@
       #analysis-filters {
         padding: 0 !important;
         margin-bottom: 12px !important;
+        font-size: 1rem !important;
+        gap: 24px !important;
+      }
+      #analysis-filters label {
+        font-size: 1rem !important;
       }
       #analysis-chart-container {
         height: 380px !important;
+        font-size: 14px !important;
       }
       .analysis-card { padding: 16px !important; }
+      .analysis-legend { font-size: 0.95rem !important; }
+      .zone-legend-item { font-size: 0.95rem !important; }
+      .card-title { font-size: 1rem !important; }
     }
   </style>
 </head>
