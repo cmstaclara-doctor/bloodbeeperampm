@@ -2781,22 +2781,17 @@ function updateAnalysisChart() {
         if (!bar.hr) return;
 
         const x = startX + barIdx * (barW + spacing) + barW / 2;
-        // Plot HR on dedicated Y-axis scale (50-110 bpm)
+        // Plot HR on dedicated Y-axis scale
         const heartY = topMargin + ((hrMax - bar.hr) / hrRange) * chartH;
 
-        // Heart shape SVG path (small, 8px)
-        const size = 4;
-        const heartPath = `M${x},${heartY - size}
-          C${x - size},${heartY - size*2} ${x - size*1.5},${heartY - size*2} ${x - size*1.5},${heartY - size}
-          C${x - size*1.5},${heartY} ${x - size*0.5},${heartY + size*0.5} ${x},${heartY + size*1.5}
-          C${x + size*0.5},${heartY + size*0.5} ${x + size*1.5},${heartY} ${x + size*1.5},${heartY - size}
-          C${x + size*1.5},${heartY - size*2} ${x + size},${heartY - size*2} ${x},${heartY - size} Z`;
-
-        const heart = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        heart.setAttribute('d', heartPath);
-        heart.setAttribute('fill', '#ff6b6b');
-        heart.setAttribute('opacity', '0.85');
-        svg.appendChild(heart);
+        // Simple circle for HR
+        const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        dot.setAttribute('cx', x);
+        dot.setAttribute('cy', heartY);
+        dot.setAttribute('r', '4');
+        dot.setAttribute('fill', '#ff6b6b');
+        dot.setAttribute('opacity', '0.85');
+        svg.appendChild(dot);
       });
     });
     }
