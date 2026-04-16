@@ -1327,7 +1327,7 @@ function clearDemoDataOnly() {
 }
 
 function loadDocData() {
-  if (!confirm('Load your April 11-24 readings?')) return;
+  if (!confirm('Load your April 11-16 readings?')) return;
   const data = [
     // Apr 11
     {id:5001101,timestamp:new Date(2026,3,11,22,0).toISOString(),sys:135,dia:100,hr:81,arm:'LEFT',slotId:'s5'},
@@ -1353,34 +1353,10 @@ function loadDocData() {
     // Apr 16
     {id:5001601,timestamp:new Date(2026,3,16,8,0).toISOString(),sys:128,dia:95,hr:99,arm:'LEFT',slotId:'s2'},
     {id:5001602,timestamp:new Date(2026,3,16,8,0).toISOString(),sys:132,dia:96,hr:99,arm:'RIGHT',slotId:'s2'},
-    // Apr 18 (Sat)
-    {id:5001801,timestamp:new Date(2026,3,18,22,0).toISOString(),sys:135,dia:100,hr:81,arm:'LEFT',slotId:'s5'},
-    {id:5001802,timestamp:new Date(2026,3,18,22,0).toISOString(),sys:136,dia:101,hr:81,arm:'RIGHT',slotId:'s5'},
-    // Apr 20 (Mon)
-    {id:5002001,timestamp:new Date(2026,3,20,7,0).toISOString(),sys:137,dia:102,hr:78,arm:'LEFT',slotId:'s1'},
-    {id:5002002,timestamp:new Date(2026,3,20,7,0).toISOString(),sys:135,dia:103,hr:81,arm:'RIGHT',slotId:'s1'},
-    {id:5002003,timestamp:new Date(2026,3,20,0,0).toISOString(),sys:136,dia:88,hr:89,arm:'LEFT',slotId:'s8'},
-    {id:5002004,timestamp:new Date(2026,3,20,0,0).toISOString(),sys:122,dia:87,hr:89,arm:'RIGHT',slotId:'s8'},
-    // Apr 21 (Tue)
-    {id:5002101,timestamp:new Date(2026,3,21,10,0).toISOString(),sys:130,dia:100,hr:99,arm:'LEFT',slotId:'s3'},
-    {id:5002102,timestamp:new Date(2026,3,21,10,0).toISOString(),sys:126,dia:91,hr:97,arm:'RIGHT',slotId:'s3'},
-    {id:5002103,timestamp:new Date(2026,3,21,0,0).toISOString(),sys:126,dia:92,hr:80,arm:'LEFT',slotId:'s8'},
-    {id:5002104,timestamp:new Date(2026,3,21,0,0).toISOString(),sys:120,dia:92,hr:81,arm:'RIGHT',slotId:'s8'},
-    // Apr 22 (Wed)
-    {id:5002201,timestamp:new Date(2026,3,22,7,0).toISOString(),sys:133,dia:95,hr:83,arm:'LEFT',slotId:'s1'},
-    {id:5002202,timestamp:new Date(2026,3,22,7,0).toISOString(),sys:128,dia:93,hr:85,arm:'RIGHT',slotId:'s1'},
-    {id:5002203,timestamp:new Date(2026,3,22,19,0).toISOString(),sys:123,dia:88,hr:92,arm:'LEFT',slotId:'s6'},
-    {id:5002204,timestamp:new Date(2026,3,22,19,0).toISOString(),sys:116,dia:88,hr:90,arm:'RIGHT',slotId:'s6'},
-    // Apr 23 (Thu)
-    {id:5002301,timestamp:new Date(2026,3,23,8,0).toISOString(),sys:128,dia:95,hr:99,arm:'LEFT',slotId:'s2'},
-    {id:5002302,timestamp:new Date(2026,3,23,8,0).toISOString(),sys:132,dia:96,hr:99,arm:'RIGHT',slotId:'s2'},
-    // Apr 24 (Fri)
-    {id:5002401,timestamp:new Date(2026,3,24,21,0).toISOString(),sys:139,dia:99,hr:88,arm:'LEFT',slotId:'s5'},
-    {id:5002402,timestamp:new Date(2026,3,24,21,0).toISOString(),sys:130,dia:98,hr:90,arm:'RIGHT',slotId:'s5'},
   ];
   saveReadings(data);
   renderAll();
-  alert(`Loaded ${data.length} readings from April 11-24, 2026.`);
+  alert(`Loaded ${data.length} readings from April 11-16, 2026.`);
 }
 
 function clearAllData() {
