@@ -320,6 +320,7 @@
     #toggle-sys { accent-color: #f97316; color: #f97316; }
     #toggle-dia { accent-color: #3b82f6; color: #3b82f6; }
     #toggle-hr { accent-color: #a855f7; color: #a855f7; }
+    #filter-hr { accent-color: #ff6b6b; }
 
     /* ── Analysis / AI ────────────────────────── */
     .summary-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 12px; }
@@ -1899,7 +1900,7 @@ function renderDashSummary() {
       <div class="sval" style="color:#f97316;">${avgSysAm}<span style="font-size:0.8rem;color:var(--muted);">/</span>${avgDiaAm}</div>
       <div style="font-size:0.75rem;color:var(--muted);margin:4px 0;">avg mmHg</div>
       ${highestAm ? `<div style="font-size:0.75rem;margin-top:6px;"><span style="color:#ef4444;">↑${highestAm.sys}</span> · <span style="color:#22c55e;">↓${lowestAm.sys}</span></div>` : ''}
-      ${avgHrAm ? `<div style="font-size:0.75rem;color:#8b5cf6;margin-top:4px;">❤️ ${avgHrAm} bpm</div>` : ''}
+      ${avgHrAm ? `<div style="font-size:0.75rem;color:#ef4444;margin-top:4px;">❤️ ${avgHrAm} bpm</div>` : ''}
     </div>
   ` : '';
 
@@ -1909,7 +1910,7 @@ function renderDashSummary() {
       <div class="sval" style="color:#3b82f6;">${avgSysPm}<span style="font-size:0.8rem;color:var(--muted);">/</span>${avgDiaPm}</div>
       <div style="font-size:0.75rem;color:var(--muted);margin:4px 0;">avg mmHg</div>
       ${highestPm ? `<div style="font-size:0.75rem;margin-top:6px;"><span style="color:#ef4444;">↑${highestPm.sys}</span> · <span style="color:#22c55e;">↓${lowestPm.sys}</span></div>` : ''}
-      ${avgHrPm ? `<div style="font-size:0.75rem;color:#0ea5e9;margin-top:4px;">❤️ ${avgHrPm} bpm</div>` : ''}
+      ${avgHrPm ? `<div style="font-size:0.75rem;color:#ef4444;margin-top:4px;">❤️ ${avgHrPm} bpm</div>` : ''}
     </div>
   ` : '';
 
