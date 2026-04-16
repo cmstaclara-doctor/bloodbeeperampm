@@ -320,7 +320,10 @@
     #toggle-sys { accent-color: #f97316; color: #f97316; }
     #toggle-dia { accent-color: #3b82f6; color: #3b82f6; }
     #toggle-hr { accent-color: #a855f7; color: #a855f7; }
-    #filter-hr { accent-color: #ff6b6b; }
+    #filter-hr { accent-color: #ff6b6b !important; }
+    #filter-hr:checked { accent-color: #ff6b6b !important; }
+    #filter-hr { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; border: 2px solid #ff6b6b; border-radius: 4px; cursor: pointer; }
+    #filter-hr:checked { background: #ff6b6b; }
 
     /* ── Analysis / AI ────────────────────────── */
     .summary-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 12px; }
