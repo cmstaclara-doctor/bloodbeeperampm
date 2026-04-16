@@ -2784,14 +2784,15 @@ function updateAnalysisChart() {
         // Plot HR on dedicated Y-axis scale
         const heartY = topMargin + ((hrMax - bar.hr) / hrRange) * chartH;
 
-        // Simple circle for HR
-        const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        dot.setAttribute('cx', x);
-        dot.setAttribute('cy', heartY);
-        dot.setAttribute('r', '4');
-        dot.setAttribute('fill', '#ff6b6b');
-        dot.setAttribute('opacity', '0.85');
-        svg.appendChild(dot);
+        // Heart emoji
+        const heart = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        heart.setAttribute('x', x);
+        heart.setAttribute('y', heartY + 4);
+        heart.setAttribute('text-anchor', 'middle');
+        heart.setAttribute('font-size', '14');
+        heart.setAttribute('fill', '#ff6b6b');
+        heart.textContent = '❤';
+        svg.appendChild(heart);
       });
     });
     }
