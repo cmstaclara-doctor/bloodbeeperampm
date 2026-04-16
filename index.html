@@ -2489,11 +2489,31 @@ function renderAnalysis() {
           <span style="width:16px;height:16px;background:#228B22;border:1px solid #999;border-radius:1px;"></span>
         </div>
       </div>
-      <div style="border-left:2px solid #ddd;padding-left:16px;display:flex;gap:8px;flex-wrap:wrap;justify-content:center;">
-        <label style="display:flex;align-items:center;justify-content:center;gap:4px;cursor:pointer;font-weight:600;font-size:0.85rem;white-space:nowrap;"><input type="checkbox" id="trend-aml" checked onchange="updateAnalysisChart()"><span style="font-size:0.8rem;">📈 AM L</span></label>
-        <label style="display:flex;align-items:center;justify-content:center;gap:4px;cursor:pointer;font-weight:600;font-size:0.85rem;white-space:nowrap;"><input type="checkbox" id="trend-amr" checked onchange="updateAnalysisChart()"><span style="font-size:0.8rem;">📈 AM R</span></label>
-        <label style="display:flex;align-items:center;justify-content:center;gap:4px;cursor:pointer;font-weight:600;font-size:0.85rem;white-space:nowrap;"><input type="checkbox" id="trend-pml" checked onchange="updateAnalysisChart()"><span style="font-size:0.8rem;">📈 PM L</span></label>
-        <label style="display:flex;align-items:center;justify-content:center;gap:4px;cursor:pointer;font-weight:600;font-size:0.85rem;white-space:nowrap;"><input type="checkbox" id="trend-pmr" checked onchange="updateAnalysisChart()"><span style="font-size:0.8rem;">📈 PM R</span></label>
+      <div style="border-left:2px solid #ddd;padding-left:16px;display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">
+        <div style="text-align:center;">
+          <label style="display:flex;align-items:center;justify-content:center;gap:4px;cursor:pointer;font-weight:600;font-size:0.9rem;margin-bottom:4px;"><input type="checkbox" id="trend-aml" checked onchange="updateAnalysisChart()"><span>Trend AM L</span></label>
+          <div style="display:flex;gap:4px;justify-content:center;">
+            <span style="width:16px;height:16px;background:#87CEEB;border:2px solid #87CEEB;border-radius:2px;"></span>
+          </div>
+        </div>
+        <div style="text-align:center;">
+          <label style="display:flex;align-items:center;justify-content:center;gap:4px;cursor:pointer;font-weight:600;font-size:0.9rem;margin-bottom:4px;"><input type="checkbox" id="trend-amr" checked onchange="updateAnalysisChart()"><span>Trend AM R</span></label>
+          <div style="display:flex;gap:4px;justify-content:center;">
+            <span style="width:16px;height:16px;background:#90EE90;border:2px solid #90EE90;border-radius:2px;"></span>
+          </div>
+        </div>
+        <div style="text-align:center;">
+          <label style="display:flex;align-items:center;justify-content:center;gap:4px;cursor:pointer;font-weight:600;font-size:0.9rem;margin-bottom:4px;"><input type="checkbox" id="trend-pml" checked onchange="updateAnalysisChart()"><span>Trend PM L</span></label>
+          <div style="display:flex;gap:4px;justify-content:center;">
+            <span style="width:16px;height:16px;background:#0066CC;border:2px solid #0066CC;border-radius:2px;"></span>
+          </div>
+        </div>
+        <div style="text-align:center;">
+          <label style="display:flex;align-items:center;justify-content:center;gap:4px;cursor:pointer;font-weight:600;font-size:0.9rem;margin-bottom:4px;"><input type="checkbox" id="trend-pmr" checked onchange="updateAnalysisChart()"><span>Trend PM R</span></label>
+          <div style="display:flex;gap:4px;justify-content:center;">
+            <span style="width:16px;height:16px;background:#228B22;border:2px solid #228B22;border-radius:2px;"></span>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -2668,8 +2688,7 @@ function updateAnalysisChart() {
     line.setAttribute('y2', p2y);
     line.setAttribute('stroke', trend.color);
     line.setAttribute('stroke-width', '3');
-    line.setAttribute('opacity', '0.6');
-    line.setAttribute('stroke-dasharray', '5,5');
+    line.setAttribute('opacity', '0.7');
     svg.appendChild(line);
   });
 
