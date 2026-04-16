@@ -2757,8 +2757,9 @@ function updateAnalysisChart() {
     });
   });
 
-  // Draw HR as heart emoji (light red) under corresponding bars
+  // Draw HR as heart emoji on HR scale (40-120 bpm)
   if (filterHR) {
+    const hrMin = 40, hrMax = 120, hrRange = hrMax - hrMin;
     barGroups.forEach(({dateIdx, group}) => {
       const groupCenterX = leftMargin + (dateIdx / (labels.length - 1 || 1)) * chartW;
       const totalGroupWidth = group.length * barW + (group.length - 1) * spacing;
@@ -2770,17 +2771,17 @@ function updateAnalysisChart() {
         if (!reading || !reading.hr) return;
 
         const x = startX + barIdx * (barW + spacing) + barW / 2;
-        // Position heart BELOW the date labels at bottom of chart
-        const heartY = topMargin + chartH + bottomMargin - 30;
+        // Position heart on HR scale (not BP scale!)
+        const y = topMargin + ((hrMax - reading.hr) / hrRange) * chartH;
 
         // Heart emoji text
         const heart = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         heart.setAttribute('x', x);
-        heart.setAttribute('y', heartY);
+        heart.setAttribute('y', y + 5);
         heart.setAttribute('text-anchor', 'middle');
-        heart.setAttribute('font-size', '18');
+        heart.setAttribute('font-size', '16');
         heart.setAttribute('fill', '#ff6b6b');
-        heart.setAttribute('opacity', '0.9');
+        heart.setAttribute('opacity', '0.85');
         heart.textContent = '❤';
         svg.appendChild(heart);
       });
