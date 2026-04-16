@@ -2737,6 +2737,46 @@ function updateAnalysisChart() {
     });
   });
 
+  // Draw HR hearts on Y-axis
+  if (filterHR) {
+    let hrs = [];
+    [am_left, am_right, pm_left, pm_right].forEach(arr => arr.forEach(r => { if (r && r.hr) hrs.push(r.hr); }));
+
+    if (hrs.length > 0) {
+      const hmin = Math.min(...hrs), hmax = Math.max(...hrs), hrange = Math.max(1, hmax - hmin);
+
+      labels.forEach((label, dateIdx) => {
+        const dateX = leftMargin + (dateIdx / Math.max(1, labels.length - 1)) * chartW;
+        [
+          {arr: am_left, idx: 0},
+          {arr: am_right, idx: 1},
+          {arr: pm_left, idx: 2},
+          {arr: pm_right, idx: 3}
+        ].forEach(({arr, idx}) => {
+          const r = arr[dateIdx];
+          if (!r || !r.hr) return;
+
+          const isPM = idx >= 2, isRight = idx % 2 === 1;
+          if (isPM && !filterPM) return;
+          if (!isPM && !filterAM) return;
+          if (isRight && !filterRight) return;
+          if (!isRight && !filterLeft) return;
+
+          const x = dateX + (idx - 1.5) * (barW + spacing) + barW / 2;
+          const y = topMargin + ((hmax - r.hr) / hrange) * chartH;
+
+          const heart = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+          heart.setAttribute('x', x);
+          heart.setAttribute('y', y + 6);
+          heart.setAttribute('text-anchor', 'middle');
+          heart.setAttribute('font-size', '16');
+          heart.setAttribute('fill', '#ff6b6b');
+          heart.textContent = '❤';
+          svg.appendChild(heart);
+        });
+      });
+    }
+  }
 
   // Draw trend lines
   const trendData = [
