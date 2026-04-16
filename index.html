@@ -2525,7 +2525,7 @@ function updateAnalysisChart() {
 
   const minY = 60, maxY = 160, rangeY = maxY - minY;
   const svgW = 1200, svgH = 400;
-  const leftMargin = 50, rightMargin = 20, topMargin = 20, bottomMargin = 60;
+  const leftMargin = 80, rightMargin = 80, topMargin = 20, bottomMargin = 100;
   const chartW = svgW - leftMargin - rightMargin, chartH = svgH - topMargin - bottomMargin;
 
   // Zone backgrounds
@@ -2627,10 +2627,11 @@ function updateAnalysisChart() {
       const x = leftMargin + (i / (labels.length - 1 || 1)) * chartW;
       const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
       text.setAttribute('x', x);
-      text.setAttribute('y', svgH - 20);
+      text.setAttribute('y', svgH - 50);
       text.setAttribute('text-anchor', 'middle');
-      text.setAttribute('font-size', '10');
-      text.setAttribute('fill', '#666');
+      text.setAttribute('font-size', '14');
+      text.setAttribute('font-weight', 'bold');
+      text.setAttribute('fill', '#333');
       text.textContent = label;
       svg.appendChild(text);
     }
@@ -2645,25 +2646,26 @@ function updateAnalysisChart() {
     {color:'#8b5a3c', label:'Crisis ≥180/≥120'}
   ];
   let legendX = leftMargin;
-  const legendY = svgH - 8;
+  const legendY = svgH - 12;
   legendItems.forEach(item => {
     const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
     rect.setAttribute('x', legendX);
-    rect.setAttribute('y', legendY - 8);
-    rect.setAttribute('width', 8);
-    rect.setAttribute('height', 8);
+    rect.setAttribute('y', legendY - 10);
+    rect.setAttribute('width', 12);
+    rect.setAttribute('height', 12);
     rect.setAttribute('fill', item.color);
     svg.appendChild(rect);
 
     const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    text.setAttribute('x', legendX + 12);
+    text.setAttribute('x', legendX + 16);
     text.setAttribute('y', legendY);
-    text.setAttribute('font-size', '9');
-    text.setAttribute('fill', '#666');
+    text.setAttribute('font-size', '12');
+    text.setAttribute('font-weight', '600');
+    text.setAttribute('fill', '#333');
     text.textContent = item.label;
     svg.appendChild(text);
 
-    legendX += 200;
+    legendX += 210;
   });
 }
 
