@@ -2770,16 +2770,17 @@ function updateAnalysisChart() {
         if (!reading || !reading.hr) return;
 
         const x = startX + barIdx * (barW + spacing) + barW / 2;
-        const y = topMargin + ((maxY - reading.hr) / rangeY) * chartH;
+        // Position heart BELOW the date labels at bottom of chart
+        const heartY = topMargin + chartH + bottomMargin - 30;
 
         // Heart emoji text
         const heart = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         heart.setAttribute('x', x);
-        heart.setAttribute('y', y + 5);
+        heart.setAttribute('y', heartY);
         heart.setAttribute('text-anchor', 'middle');
-        heart.setAttribute('font-size', '16');
+        heart.setAttribute('font-size', '18');
         heart.setAttribute('fill', '#ff6b6b');
-        heart.setAttribute('opacity', '0.95');
+        heart.setAttribute('opacity', '0.9');
         heart.textContent = '❤';
         svg.appendChild(heart);
       });
