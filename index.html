@@ -2599,7 +2599,9 @@ function updateAnalysisChart() {
   barGroups.forEach(({dateIdx, group}) => {
     const groupCenterX = leftMargin + (dateIdx / (labels.length - 1 || 1)) * chartW;
     const totalGroupWidth = group.length * barW + (group.length - 1) * spacing;
-    const startX = groupCenterX - totalGroupWidth / 2;
+    let startX = groupCenterX - totalGroupWidth / 2;
+    // Clamp to chart bounds
+    startX = Math.max(leftMargin + 5, Math.min(startX, leftMargin + chartW - totalGroupWidth - 5));
 
     group.forEach((bar, barIdx) => {
       const {sys, dia, color} = bar;
