@@ -2537,7 +2537,7 @@ function renderAnalysis() {
         <div class="zone-legend-item"><div class="zone-dot" style="background:#f97316;"></div> High 130–139/80–89 (Bad)</div>
         <div class="zone-legend-item"><div class="zone-dot" style="background:#ef4444;"></div> Very High ≥140/≥90 (Bad)</div>
         <div class="zone-legend-item"><div class="zone-dot" style="background:#7f1d1d;"></div> Crisis ≥180/≥120</div>
-        <div class="zone-legend-item"><div class="zone-dot" style="background:#a855f7;border-radius:50%;"></div> Heart Rate (bpm)</div>
+        <div class="zone-legend-item"><div style="font-size:1.2rem;width:10px;height:10px;display:flex;align-items:center;justify-content:center;color:#ff6b6b;">♥</div> Heart Rate (bpm)</div>
       </div>
     </div>
 
@@ -2732,7 +2732,7 @@ function updateAnalysisChart() {
     });
   });
 
-  // Draw HR dots under corresponding bars (same color as bar)
+  // Draw HR dots as hearts (light red) under corresponding bars
   if (filterHR) {
     barGroups.forEach(({dateIdx, group}) => {
       const groupCenterX = leftMargin + (dateIdx / (labels.length - 1 || 1)) * chartW;
@@ -2747,15 +2747,22 @@ function updateAnalysisChart() {
         const x = startX + barIdx * (barW + spacing) + barW / 2;
         const y = topMargin + ((maxY - reading.hr) / rangeY) * chartH;
 
-        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        circle.setAttribute('cx', x);
-        circle.setAttribute('cy', y);
-        circle.setAttribute('r', 5);
-        circle.setAttribute('fill', bar.color);
-        circle.setAttribute('stroke', '#fff');
-        circle.setAttribute('stroke-width', '1.5');
-        circle.setAttribute('opacity', '0.9');
-        svg.appendChild(circle);
+        // Heart shape using path
+        const heart = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        const size = 6;
+        const hx = x - size/2;
+        const hy = y - size/2;
+        const d = `M${hx + size/2},${hy + size/1.5}
+                  C${hx},${hy + size/2} ${hx},${hy + size/4} ${hx + size/4},${hy + size/4}
+                  C${hx + size/2.5},${hy} ${hx + size/1.5},${hy} ${hx + size/2},${hy + size/2.5}
+                  C${hx + size/2.5},${hy} ${hx + size/1.5},${hy} ${hx + size/1.25},${hy + size/4}
+                  C${hx + size},${hy + size/4} ${hx + size},${hy + size/2} ${hx + size/2},${hy + size/1.5}Z`;
+        heart.setAttribute('d', d);
+        heart.setAttribute('fill', '#ff6b6b');
+        heart.setAttribute('stroke', '#fff');
+        heart.setAttribute('stroke-width', '1');
+        heart.setAttribute('opacity', '0.95');
+        svg.appendChild(heart);
       });
     });
   }
