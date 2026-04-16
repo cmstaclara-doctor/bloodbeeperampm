@@ -2761,47 +2761,7 @@ function updateAnalysisChart() {
     });
   });
 
-  // Draw HR as circles - plot from raw data
-  if (filterHR) {
-    const dataArrays = [{data: am_left, arrayIdx: 0}, {data: am_right, arrayIdx: 1}, {data: pm_left, arrayIdx: 2}, {data: pm_right, arrayIdx: 3}];
-    let allHR = [];
-    dataArrays.forEach(({data}) => data.forEach(r => { if (r && r.hr) allHR.push(r.hr); }));
-
-    if (allHR.length > 0) {
-      const hmin = Math.min(...allHR), hmax = Math.max(...allHR), hrange = Math.max(1, hmax - hmin);
-
-      // For each date
-      labels.forEach((label, dateIdx) => {
-        // For each of the 4 data arrays
-        dataArrays.forEach(({data, arrayIdx}) => {
-          const reading = data[dateIdx];
-          if (!reading || !reading.hr) return;
-
-          // Check if this reading should be displayed (based on filters)
-          const isPM = arrayIdx >= 2;
-          const isRight = arrayIdx % 2 === 1;
-          if (isPM && !filterPM) return;
-          if (!isPM && !filterAM) return;
-          if (isRight && !filterRight) return;
-          if (!isRight && !filterLeft) return;
-
-          // Calculate position
-          const dateX = leftMargin + (dateIdx / Math.max(1, labels.length - 1)) * chartW;
-          const barOffset = (arrayIdx - 1.5) * (barW + spacing);
-          const heartX = dateX + barOffset + barW / 2;
-          const heartY = topMargin + ((hmax - reading.hr) / hrange) * chartH;
-
-          const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-          circle.setAttribute('cx', heartX.toFixed(1));
-          circle.setAttribute('cy', heartY.toFixed(1));
-          circle.setAttribute('r', '8');
-          circle.setAttribute('fill', '#ff0000');
-          circle.setAttribute('opacity', '0.8');
-          svg.appendChild(circle);
-        });
-      });
-    }
-  }
+  // HR visualization - TODO: fresh implementation
 
   // Draw trend lines
   const trendData = [
