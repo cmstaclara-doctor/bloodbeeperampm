@@ -2757,33 +2757,28 @@ function updateAnalysisChart() {
     });
   });
 
-  // Draw HR as hearts (circles) on Y-axis
+  // Draw HR as circles on Y-axis
   if (filterHR) {
-    let allHR = [];
-    barGroups.forEach(g => g.group.forEach(bar => { if (bar.hr) allHR.push(bar.hr); }));
+    let hrs = [];
+    barGroups.forEach(bg => bg.group.forEach(b => { if (b.hr) hrs.push(b.hr); }));
 
-    if (allHR.length > 0) {
-      const hrMin = Math.min(...allHR);
-      const hrMax = Math.max(...allHR);
-      const hrRange = Math.max(1, hrMax - hrMin);
-
-      barGroups.forEach(({dateIdx, group}) => {
-        const centerX = leftMargin + (dateIdx / (labels.length - 1 || 1)) * chartW;
-        const totalW = group.length * barW + (group.length - 1) * spacing;
-        let startX = centerX - totalW / 2;
-        startX = Math.max(leftMargin + 5, Math.min(startX, leftMargin + chartW - totalW - 5));
-
-        group.forEach((bar, barIdx) => {
-          if (bar.hr < 1) return;
-          const x = startX + barIdx * (barW + spacing) + barW / 2;
-          const y = topMargin + ((hrMax - bar.hr) / hrRange) * chartH;
-          const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-          c.setAttribute('cx', x);
-          c.setAttribute('cy', y);
-          c.setAttribute('r', '3.5');
-          c.setAttribute('fill', '#ff6b6b');
-          c.setAttribute('opacity', '0.9');
-          svg.appendChild(c);
+    if (hrs.length > 0) {
+      const hmin = Math.min(...hrs), hmax = Math.max(...hrs), hrange = hmax - hmin || 1;
+      barGroups.forEach(bg => {
+        const cx = leftMargin + (bg.dateIdx / (labels.length - 1 || 1)) * chartW;
+        const tw = bg.group.length * barW + (bg.group.length - 1) * spacing;
+        let sx = cx - tw / 2;
+        sx = Math.max(leftMargin + 5, Math.min(sx, leftMargin + chartW - tw - 5));
+        bg.group.forEach((b, i) => {
+          if (!b.hr) return;
+          const bx = sx + i * (barW + spacing) + barW / 2;
+          const by = topMargin + ((hmax - b.hr) / hrange) * chartH;
+          const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          circle.setAttribute('cx', bx);
+          circle.setAttribute('cy', by);
+          circle.setAttribute('r', '4');
+          circle.setAttribute('fill', '#ff6b6b');
+          svg.appendChild(circle);
         });
       });
     }
