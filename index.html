@@ -2490,6 +2490,12 @@ function renderAnalysis() {
           <span style="width:16px;height:16px;background:#228B22;border:1px solid #999;border-radius:1px;"></span>
         </div>
       </div>
+      <div style="text-align:center;">
+        <label style="display:flex;align-items:center;justify-content:center;gap:4px;cursor:pointer;font-weight:600;font-size:0.9rem;margin-bottom:5px;"><input type="checkbox" id="filter-hr" checked onchange="updateAnalysisChart()"><span>Heart Rate</span></label>
+        <div style="display:flex;gap:4px;justify-content:center;">
+          <span style="width:16px;height:16px;background:#a855f7;border:1px solid #999;border-radius:50%;"></span>
+        </div>
+      </div>
       <div style="border-left:2px solid #ddd;padding-left:16px;display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">
         <div style="text-align:center;">
           <label style="display:flex;align-items:center;justify-content:center;gap:4px;cursor:pointer;font-weight:600;font-size:0.9rem;margin-bottom:4px;"><input type="checkbox" id="trend-aml" checked onchange="updateAnalysisChart()"><span>Trend AM L</span></label>
@@ -2531,6 +2537,7 @@ function renderAnalysis() {
         <div class="zone-legend-item"><div class="zone-dot" style="background:#f97316;"></div> High 130–139/80–89 (Bad)</div>
         <div class="zone-legend-item"><div class="zone-dot" style="background:#ef4444;"></div> Very High ≥140/≥90 (Bad)</div>
         <div class="zone-legend-item"><div class="zone-dot" style="background:#7f1d1d;"></div> Crisis ≥180/≥120</div>
+        <div class="zone-legend-item"><div class="zone-dot" style="background:#a855f7;border-radius:50%;"></div> Heart Rate (bpm)</div>
       </div>
     </div>
 
@@ -2613,6 +2620,7 @@ function updateAnalysisChart() {
   const filterPM = document.getElementById('filter-pm')?.checked ?? true;
   const filterLeft = document.getElementById('filter-left')?.checked ?? true;
   const filterRight = document.getElementById('filter-right')?.checked ?? true;
+  const filterHR = document.getElementById('filter-hr')?.checked ?? true;
   const trendAML = document.getElementById('trend-aml')?.checked ?? true;
   const trendAMR = document.getElementById('trend-amr')?.checked ?? true;
   const trendPML = document.getElementById('trend-pml')?.checked ?? true;
@@ -2722,6 +2730,32 @@ function updateAnalysisChart() {
       svg.appendChild(rect);
     });
   });
+
+  // Draw HR dots
+  if (filterHR) {
+    const allReadings = [
+      ...am_left.map((r, i) => ({...r, dateIdx: i})),
+      ...am_right.map((r, i) => ({...r, dateIdx: i})),
+      ...pm_left.map((r, i) => ({...r, dateIdx: i})),
+      ...pm_right.map((r, i) => ({...r, dateIdx: i}))
+    ].filter(r => r && r.hr);
+
+    allReadings.forEach(reading => {
+      const x = leftMargin + (reading.dateIdx / (labels.length - 1 || 1)) * chartW;
+      const y = topMargin + ((maxY - reading.hr) / rangeY) * chartH;
+      const circleRadius = 4;
+
+      const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      circle.setAttribute('cx', x);
+      circle.setAttribute('cy', y);
+      circle.setAttribute('r', circleRadius);
+      circle.setAttribute('fill', '#a855f7');
+      circle.setAttribute('stroke', '#7c3aed');
+      circle.setAttribute('stroke-width', '1.5');
+      circle.setAttribute('opacity', '0.8');
+      svg.appendChild(circle);
+    });
+  }
 
   // Draw trend lines
   const trendData = [
