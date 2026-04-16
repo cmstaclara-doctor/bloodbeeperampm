@@ -2759,6 +2759,15 @@ function updateAnalysisChart() {
 
   // Draw HR as circles on Y-axis
   if (filterHR) {
+    // TEST: Draw one circle at known position to verify SVG works
+    const testCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    testCircle.setAttribute('cx', '200');
+    testCircle.setAttribute('cy', '150');
+    testCircle.setAttribute('r', '6');
+    testCircle.setAttribute('fill', '#ff0000');
+    svg.appendChild(testCircle);
+
+    // Now draw actual HR circles
     let hrs = [];
     barGroups.forEach(bg => bg.group.forEach(b => { if (b.hr) hrs.push(b.hr); }));
 
