@@ -2757,9 +2757,8 @@ function updateAnalysisChart() {
     });
   });
 
-  // Draw HR as dots on HR scale (40-120 bpm)
+  // Draw HR as heart shapes ABOVE bars (fixed position, no scale)
   if (filterHR) {
-    const hrMin = 40, hrMax = 120, hrRange = hrMax - hrMin;
     barGroups.forEach(({dateIdx, group}) => {
       const groupCenterX = leftMargin + (dateIdx / (labels.length - 1 || 1)) * chartW;
       const totalGroupWidth = group.length * barW + (group.length - 1) * spacing;
@@ -2770,30 +2769,20 @@ function updateAnalysisChart() {
         if (!bar.hr) return;
 
         const x = startX + barIdx * (barW + spacing) + barW / 2;
-        // Position dot on HR scale (40-120 bpm)
-        const y = topMargin + ((hrMax - bar.hr) / hrRange) * chartH;
+        const heartY = topMargin - 15; // Fixed position above bars
 
-        // Draw red dot (circle) for heart rate
-        const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        dot.setAttribute('cx', x);
-        dot.setAttribute('cy', y);
-        dot.setAttribute('r', '5');
-        dot.setAttribute('fill', '#ff6b6b');
-        dot.setAttribute('opacity', '0.8');
-        dot.setAttribute('stroke', '#ff4444');
-        dot.setAttribute('stroke-width', '1');
-        svg.appendChild(dot);
+        // Heart shape SVG path
+        const heartPath = `M${x},${heartY - 3}
+          C${x - 3},${heartY - 6} ${x - 6},${heartY - 6} ${x - 6},${heartY - 3}
+          C${x - 6},${heartY} ${x - 3},${heartY + 2} ${x},${heartY + 5}
+          C${x + 3},${heartY + 2} ${x + 6},${heartY} ${x + 6},${heartY - 3}
+          C${x + 6},${heartY - 6} ${x + 3},${heartY - 6} ${x},${heartY - 3} Z`;
 
-        // Add HR value label above dot
-        const hrLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        hrLabel.setAttribute('x', x);
-        hrLabel.setAttribute('y', y - 12);
-        hrLabel.setAttribute('text-anchor', 'middle');
-        hrLabel.setAttribute('font-size', '11');
-        hrLabel.setAttribute('fill', '#ff6b6b');
-        hrLabel.setAttribute('font-weight', 'bold');
-        hrLabel.textContent = bar.hr;
-        svg.appendChild(hrLabel);
+        const heart = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        heart.setAttribute('d', heartPath);
+        heart.setAttribute('fill', '#ff6b6b');
+        heart.setAttribute('opacity', '0.85');
+        svg.appendChild(heart);
       });
     });
   }
