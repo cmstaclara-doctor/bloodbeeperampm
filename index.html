@@ -2718,10 +2718,10 @@ function updateAnalysisChart() {
   const barGroups = [];
   labels.forEach((label, dateIdx) => {
     const group = [];
-    if (filterAM && filterLeft && am_left[dateIdx]) group.push({sys: am_left[dateIdx].sys, dia: am_left[dateIdx].dia, color: '#87CEEB'});
-    if (filterAM && filterRight && am_right[dateIdx]) group.push({sys: am_right[dateIdx].sys, dia: am_right[dateIdx].dia, color: '#90EE90'});
-    if (filterPM && filterLeft && pm_left[dateIdx]) group.push({sys: pm_left[dateIdx].sys, dia: pm_left[dateIdx].dia, color: '#0066CC'});
-    if (filterPM && filterRight && pm_right[dateIdx]) group.push({sys: pm_right[dateIdx].sys, dia: pm_right[dateIdx].dia, color: '#228B22'});
+    if (filterAM && filterLeft && am_left[dateIdx]) group.push({sys: am_left[dateIdx].sys, dia: am_left[dateIdx].dia, hr: am_left[dateIdx].hr, color: '#87CEEB', arrayIdx: 0});
+    if (filterAM && filterRight && am_right[dateIdx]) group.push({sys: am_right[dateIdx].sys, dia: am_right[dateIdx].dia, hr: am_right[dateIdx].hr, color: '#90EE90', arrayIdx: 1});
+    if (filterPM && filterLeft && pm_left[dateIdx]) group.push({sys: pm_left[dateIdx].sys, dia: pm_left[dateIdx].dia, hr: pm_left[dateIdx].hr, color: '#0066CC', arrayIdx: 2});
+    if (filterPM && filterRight && pm_right[dateIdx]) group.push({sys: pm_right[dateIdx].sys, dia: pm_right[dateIdx].dia, hr: pm_right[dateIdx].hr, color: '#228B22', arrayIdx: 3});
     if (group.length > 0) barGroups.push({dateIdx, group});
   });
 
@@ -2767,12 +2767,11 @@ function updateAnalysisChart() {
       startX = Math.max(leftMargin + 5, Math.min(startX, leftMargin + chartW - totalGroupWidth - 5));
 
       group.forEach((bar, barIdx) => {
-        const reading = [am_left, am_right, pm_left, pm_right][barIdx]?.[dateIdx];
-        if (!reading || !reading.hr) return;
+        if (!bar.hr) return;
 
         const x = startX + barIdx * (barW + spacing) + barW / 2;
         // Position dot on HR scale (40-120 bpm)
-        const y = topMargin + ((hrMax - reading.hr) / hrRange) * chartH;
+        const y = topMargin + ((hrMax - bar.hr) / hrRange) * chartH;
 
         // Draw red dot (circle) for heart rate
         const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
@@ -2793,7 +2792,7 @@ function updateAnalysisChart() {
         hrLabel.setAttribute('font-size', '11');
         hrLabel.setAttribute('fill', '#ff6b6b');
         hrLabel.setAttribute('font-weight', 'bold');
-        hrLabel.textContent = reading.hr;
+        hrLabel.textContent = bar.hr;
         svg.appendChild(hrLabel);
       });
     });
