@@ -2757,8 +2757,9 @@ function updateAnalysisChart() {
     });
   });
 
-  // Draw HR as heart shapes ABOVE bars (fixed position, no scale)
+  // Draw HR as heart shapes on Y-axis (HR scale: 50-110 bpm)
   if (filterHR) {
+    const hrMin = 50, hrMax = 110, hrRange = hrMax - hrMin;
     barGroups.forEach(({dateIdx, group}) => {
       const groupCenterX = leftMargin + (dateIdx / (labels.length - 1 || 1)) * chartW;
       const totalGroupWidth = group.length * barW + (group.length - 1) * spacing;
@@ -2769,14 +2770,16 @@ function updateAnalysisChart() {
         if (!bar.hr) return;
 
         const x = startX + barIdx * (barW + spacing) + barW / 2;
-        const heartY = topMargin - 15; // Fixed position above bars
+        // Plot HR on dedicated Y-axis scale (50-110 bpm)
+        const heartY = topMargin + ((hrMax - bar.hr) / hrRange) * chartH;
 
-        // Heart shape SVG path
-        const heartPath = `M${x},${heartY - 3}
-          C${x - 3},${heartY - 6} ${x - 6},${heartY - 6} ${x - 6},${heartY - 3}
-          C${x - 6},${heartY} ${x - 3},${heartY + 2} ${x},${heartY + 5}
-          C${x + 3},${heartY + 2} ${x + 6},${heartY} ${x + 6},${heartY - 3}
-          C${x + 6},${heartY - 6} ${x + 3},${heartY - 6} ${x},${heartY - 3} Z`;
+        // Heart shape SVG path (small, 8px)
+        const size = 4;
+        const heartPath = `M${x},${heartY - size}
+          C${x - size},${heartY - size*2} ${x - size*1.5},${heartY - size*2} ${x - size*1.5},${heartY - size}
+          C${x - size*1.5},${heartY} ${x - size*0.5},${heartY + size*0.5} ${x},${heartY + size*1.5}
+          C${x + size*0.5},${heartY + size*0.5} ${x + size*1.5},${heartY} ${x + size*1.5},${heartY - size}
+          C${x + size*1.5},${heartY - size*2} ${x + size},${heartY - size*2} ${x},${heartY - size} Z`;
 
         const heart = document.createElementNS('http://www.w3.org/2000/svg', 'path');
         heart.setAttribute('d', heartPath);
